@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Assign1-s12345-s67890"
+    ]
+}
