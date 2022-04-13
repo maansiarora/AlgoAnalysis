@@ -1,3 +1,4 @@
+from typing import List
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -11,11 +12,15 @@ from dictionary.word_frequency import WordFrequency
 
 class HashTableDictionary(BaseDictionary):
 
-    def build_dictionary(self, words_frequencies: [WordFrequency]):
+    def build_dictionary(self, words_frequencies: List[WordFrequency]):
         """
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
+        self.dict={}
+        for i in words_frequencies:
+            self.dict.update({i.word:i.frequency})
+
         # TO BE IMPLEMENTED
 
     def search(self, word: str) -> int:
@@ -26,6 +31,10 @@ class HashTableDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         # place holder for return
+        for keys in self.dict.keys():
+            if keys == word:             #strip if needed
+                return self.dict[keys]
+
         return 0
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -36,6 +45,11 @@ class HashTableDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         # place holder for return
+        for i in self.dict.keys():
+            if i!=word_frequency.word:
+                self.dict[word_frequency.word]=word_frequency.frequency
+                return True
+
         return False
 
     def delete_word(self, word: str) -> bool:
@@ -46,9 +60,13 @@ class HashTableDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         # place holder for return
+        for keys in self.dict.keys():
+            if keys == word:             #strip if needed
+                self.dict.pop(keys)
+                return True
         return False
 
-    def autocomplete(self, word: str) -> [WordFrequency]:
+    def autocomplete(self, word: str) -> List[WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'word' as a prefix
         @param word: word to be autocompleted
@@ -56,4 +74,20 @@ class HashTableDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         # place holder for return
-        return []
+        prefix_dict = {}  
+        final_li = []  
+
+        for i in self.dict.keys():
+            if i.startswith(word):
+                prefix_dict[i]=self.dict[i]
+        
+        prefix_dict = dict(sorted(prefix_dict.items(), key=lambda x: x[1], reverse=True))     
+        #prefix_dict = prefix_dict[0:3]
+        li = list(prefix_dict)[:3]
+
+        final_li=[]
+        for i in li:
+            x = WordFrequency(i, prefix_dict[i])
+            final_li.append(x)
+
+        return final_li
