@@ -16,14 +16,15 @@ from dictionary.ternarysearchtree_dictionary import TernarySearchTreeDictionary
  
  
 # -------------------------------------------------------------------
-# DON'T CHANGE THIS FILE.
+# 
 # This is the entry point to run the program in file-based mode.
 # It uses the data file to initialise the set of words & frequencies.
 # It takes a command file as input and output into the output file.
 # Refer to usage() for exact format of input expected to the program.
 #
-# __author__ = 'Son Hoang Dau'
-# __copyright__ = 'Copyright 2022, RMIT University'
+# 
+# We have created this file for empirical analysis of our algorithms
+# and will use it for calculating time complexities for different datasets.
 # -------------------------------------------------------------------
  
 def usage():
@@ -183,8 +184,7 @@ if __name__ == '__main__':
         print("Command file doesn't exist.")
         usage()
  
- 
-    print("hey")
+    # read from data file to populate the initial set of points
     data_filename = args[2]
     words_frequencies_from_file = []
    
@@ -202,214 +202,177 @@ if __name__ == '__main__':
     word_dict = {}
     with open('sampleData.txt', 'r') as input_file:
         fileLines = input_file.readlines()
-        #print (fileLines[1][0:fileLines[1].index(" ")], fileLines[1][fileLines[1].index(" "):len(fileLines[1])])
-        '''while len(word_dict.keys()) < 10:
-            word = fileLines[random.randint(0, 19)]
-            word = word.replace("\n", "") # Get a random line num
-            word = word.replace(" ", "")
-            word = word.lower()
-            print (fileLines)
  
+    # randomly selecting 1000 words out of 5000 words from sampleData.txt
+    with open('new.txt', 'w') as output_file:
+        while len(word_dict.keys()) < 1000:
+            x = fileLines[random.randint(0, 4999)]
+            word= x[0:x.index(" ")]
+            frequency= x[x.index(" "):len(x)]
             if word not in word_dict:
-                word_dict[word] = random.randint(1, 10000000) # 1 - 10mil score'''
-    #print (len(fileLines))
- 
-    with open('new4.txt', 'w') as output_file:
-        #for i in range(len(fileLines)):
-            while len(word_dict.keys()) < 1000:
-                x = fileLines[random.randint(0, 4999)]
-                word= x[0:x.index(" ")]
-                frequency= x[x.index(" "):len(x)]
-                if word not in word_dict:
-                    word_dict[word]=frequency
-                
-                    #for key in word_dict:
-                    output_file.write(f"{word}  {frequency}")
-    #print(word_dict)
- 
-    '''with open('sampleDataToy.txt', 'r') as input_file:
-            fileLines = input_file.readlines()
-            while len(word_dict.keys()) < 10:
-                word = fileLines[random.randint(0, 19)]
-                word = word.replace("\n", "") # Get a random line num
-                word = word.replace("-", "")
-                word = word.lower()
-                values = line.split()
-                word = values[0]
-                frequency = int(values[1])
- 
- 
-                if word not in word_dict:
-                    word_dict[word] = random.randint(1, 10000000) # 1 - 10mil score
- 
-    with open('new2.txt', 'w') as output_file:
-        for key in word_dict:
-            output_file.write(f"{word} {frequency}\n")'''
- 
- 
- 
-    words_to_use = 1000
- 
-    lines = open('new4.txt').readlines()
-    for i in range(len(lines)):
-        lines[i] = lines[i].replace("\n", "")
-    ds = {} # Datasets
- 
-    ds_names = ["ds1", "ds2", "ds3"]
- 
-    for ds_name in ds_names:
-        random.shuffle(lines)
-        ds[ds_name + "_unsort"] = lines[:words_to_use]
-        ds[ds_name + "_asc"] = sorted(ds[ds_name + "_unsort"])
-        ds[ds_name + "_desc"] = sorted(ds[ds_name + "_unsort"], reverse=True)
- 
-    sizes = [10, 100, 500, 1000, 2000]
-    ds_add = {}
+                word_dict[word]=frequency
+                output_file.write(f"{word}  {frequency}")
     
 
+    lines_used = 1000
+ 
+    lines = open('new.txt').readlines()
+    for i in range(len(lines)):
+        lines[i] = lines[i].replace("\n", "")
+    dataset = {} # Datasets
+ 
+    dataset_names = ["dataset1", "dataset2", "dataset3"]
+ 
+    for dataset_name in dataset_names:
+        random.shuffle(lines)
+        dataset[dataset_name + "_unsort"] = lines[:lines_used]
+        dataset[dataset_name + "_asc"] = sorted(dataset[dataset_name + "_unsort"])
+        dataset[dataset_name + "_desc"] = sorted(dataset[dataset_name + "_unsort"], reverse=True)
+ 
 
-    for ds_key in ds:
-        cur_size = 0
-        time_taken = []
-        temp_agent = agent
+
+    # Scenario 1 - growing dictionary
+    # defining the sizes of words to be added to the base dictionary
+    sizes = [10, 100, 500, 1000, 2000]
+    dataset_addition = {}
+    
+    for dataset_key in dataset:
+        current_size = 0 # current size of the dictionary
+        time_taken = [] # list to define the time taken to perform the function
+        temp_agent = agent 
  
         for size in sizes:
-            time_taken.append(dict_addition(temp_agent, ds[ds_key][cur_size:size])) 
-            cur_size = size
+            time_taken.append(dict_addition(temp_agent, dataset[dataset_key][current_size:size])) 
+            current_size = size
             if len(time_taken) > 1:
                 time_taken[-1] += time_taken[-2]
  
-        ds_add[ds_key] = time_taken
+        dataset_addition[dataset_key] = time_taken
  
-    add_table = []
+    addition_table = []
     for size in sizes:
-        add_table.append([size, [], [], []])
+        addition_table.append([size, [], [], []])
  
-    for ds_add_key in ds_add:
-        for i in range(len(ds_add[ds_add_key])):
-            sort_status = ds_add_key.split("_")[1]
-            for j in range(len(add_table)):
-                if sizes[i] == add_table[j][0]:
+    for dataset_add_key in dataset_addition:
+        for i in range(len(dataset_addition[dataset_add_key])):
+            sort_status = dataset_add_key.split("_")[1]
+            for j in range(len(addition_table)):
+                if sizes[i] == addition_table[j][0]:
                     if sort_status == "unsort":
-                        add_table[j][1].append(ds_add[ds_add_key][i])
+                        addition_table[j][1].append(dataset_addition[dataset_add_key][i])
                     elif sort_status == "asc":
-                        add_table[j][2].append(ds_add[ds_add_key][i])
+                        addition_table[j][2].append(dataset_addition[dataset_add_key][i])
                     elif sort_status == "desc":
-                        add_table[j][3].append(ds_add[ds_add_key][i])
+                        addition_table[j][3].append(dataset_addition[dataset_add_key][i])
  
-    for i in range(len(add_table)):
-        for j in range(1, len(ds_names) + 1):
-            add_table[i][j] = sum(add_table[i][j]) / 3
+    for i in range(len(addition_table)):
+        for j in range(1, len(dataset_names) + 1):
+            addition_table[i][j] = sum(addition_table[i][j]) / 3
  
-    print_description(add_table, 'add')
+    print_description(addition_table, 'add') # priting the table describing the time compexities in different scenarios 
    
  
+    # Scenario 2 - shrinking dictionary
+    # defining the sizes of words to be deleted from the base dictionary
+    sizes = [10, 100, 200, 400, 800]
+    dataset_del = {}
  
-    # Shrinking dictionary (delete word)
-    sizes = [10, 100, 400]
-    ds_del = {}
- 
-    for ds_key in ds:
-        cur_size = 0
-        time_taken = []
+    for dataset_key in dataset:
+        current_size = 0 # current size of the dictionary
+        time_taken = [] # list to define the time taken to perform the function
         temp_agent = agent
  
         for size in sizes:
-            time_taken.append(dict_deletion(temp_agent, ds[ds_key][cur_size:size]))
-            cur_size = size
+            time_taken.append(dict_deletion(temp_agent, dataset[dataset_key][current_size:size]))
+            current_size = size
             if len(time_taken) > 1:
                 time_taken[-1] += time_taken[-2]
  
-        ds_del[ds_key] = time_taken
-    print(len(ds_del))
-    print(len(ds))
-    del_table = []
+        dataset_del[dataset_key] = time_taken
+   
+    deletion_table = []
     for size in sizes:
-        del_table.append([size, [], [], []])
+        deletion_table.append([size, [], [], []])
  
-    for ds_del_key in ds_del:
-        for i in range(len(ds_del[ds_del_key])):
-            sort_status = ds_del_key.split("_")[1]
-            for j in range(len(del_table)):
-                if sizes[i] == del_table[j][0]:
+    for dataset_del_key in dataset_del:
+        for i in range(len(dataset_del[dataset_del_key])):
+            sort_status = dataset_del_key.split("_")[1]
+            for j in range(len(deletion_table)):
+                if sizes[i] == deletion_table[j][0]:
                     if sort_status == "unsort":
-                        del_table[j][1].append(ds_del[ds_del_key][i])
+                        deletion_table[j][1].append(dataset_del[dataset_del_key][i])
                     elif sort_status == "asc":
-                        del_table[j][2].append(ds_del[ds_del_key][i])
+                        deletion_table[j][2].append(dataset_del[dataset_del_key][i])
                     elif sort_status == "desc":
-                        del_table[j][3].append(ds_del[ds_del_key][i])
+                        deletion_table[j][3].append(dataset_del[dataset_del_key][i])
  
-    for i in range(len(del_table)):
-        for j in range(1, len(ds_names) + 1):
-            del_table[i][j] = sum(del_table[i][j]) / 3
- 
-    print_description(del_table, 'delete')
- 
-    # Autocompleting dictionary (ac word)
- 
+    for i in range(len(deletion_table)):
+        for j in range(1, len(dataset_names) + 1):
+            deletion_table[i][j] = sum(deletion_table[i][j]) / 3
+
+    #printing the description table for time complexities of different scenarios
+    print_description(deletion_table, 'delete') 
+
+
+    # Scenario 3 - static dictionary
+    # Autocompleting dictionary
+
     sizes = []
- 
     for num in range(1, 8):
         sizes.append(num)
  
-    number_of_acs = 3
-    ac_phrases = {}
- 
-    # Create 10 of each size (based on random word in newData5000.txt) and store in list (not guaranteed to be inside input file)
+    number_of_autocompletes = 3
+    autocomplete_phrases = {}
     for size in sizes:
         phrase_list = []
         time_taken = 0
  
-        while len(phrase_list) < number_of_acs:
-            line_num = random.randint(0, len(lines) - 1)
-            cur_word = lines[line_num].split("  ")[0]
+        while len(phrase_list) < number_of_autocompletes:
+            line_num = random.randint(0, len(lines) - 1) # randomly selecting a line number from our dataset
+            current_word = lines[line_num].split("  ")[0] # getting the word of that randomly selected line
            
             phrase = ""
-            if len(cur_word) >= size:
-                phrase = cur_word[:size]
- 
+            if len(current_word) >= size:
+                phrase = current_word[:size]
             if phrase != "" and phrase not in phrase_list:
                 phrase_list.append(phrase)
  
         for phrase in phrase_list:
             time_taken += dict_autocompletion(agent, phrase)
-            #print(time_taken)
  
-        # Get average time
-        ac_phrases[size] = time_taken / number_of_acs
-        #print(ac_phrases[size])
+        # getting the average time
+        autocomplete_phrases[size] = time_taken / number_of_autocompletes
+        
     ac_table = []
+    for key in autocomplete_phrases:
+        ac_table.append([key, autocomplete_phrases[key]])
  
-    for key in ac_phrases:
-        ac_table.append([key, ac_phrases[key]])
- 
-    print_description(ac_table, 'autocomplete')
+    print_description(ac_table, 'autocomplete') #printing the description table for autocomplete operation
  
  
+    # Scenario 3 - static dictinary
+    # search operation
     sizes = []
  
-    for num in range(1, 8):
-        sizes.append(num)
+    for number in range(1, 8):
+        sizes.append(number)
  
     number_of_acs = 3
-    ac_phrases = {}
- 
-    # Create 10 of each size (based on random word in newData5000.txt) and store in list (not guaranteed to be inside input file)
+    autocomplete_phrases = {}
+    
     for size in sizes:
         phrase_list = []
         time_taken = 0
  
         while len(phrase_list) < number_of_acs:
-            line_num = random.randint(0, len(lines) - 1)
-            cur_word = lines[line_num].split("  ")[0]
-            phrase_list.append(cur_word)
+            line_number = random.randint(0, len(lines) - 1) # randomly selecting a line number from our dataset
+            current_word = lines[line_number].split("  ")[0] # getting the word of that randomly selected line
+            phrase_list.append(current_word)
  
-       
-            time_taken += dict_search(agent, cur_word)
-        print(time_taken, cur_word)
+            time_taken += dict_search(agent, current_word) # calculating the time to search the current word
+        print(time_taken, current_word) #printing the time taken for the operations along with the word being searched
+
  
-        # Get average time
-        #ac_phrases[size] = time_taken / number_of_acs
-        #print(ac_phrases[size])
+    
    
 

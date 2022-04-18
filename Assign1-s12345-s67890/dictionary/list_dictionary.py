@@ -17,13 +17,12 @@ class ListDictionary(BaseDictionary):
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
-        self.dict_list = []
+        self.dict_list = [] # creating empty list
 
         for i in words_frequencies:
             li = [i.word, i.frequency]
-            self.dict_list.append(li)
+            self.dict_list.append(li) # adding words and their frequencies to the list
 
-        # TO BE IMPLEMENTED
 
     def search(self, word: str) -> int:
         """
@@ -31,13 +30,12 @@ class ListDictionary(BaseDictionary):
         @param word: the word to be searched
         @return: frequency > 0 if found and 0 if NOT found
         """
-        # TO BE IMPLEMENTED
-        
+
         for i in self.dict_list:
             if i[0] == word:             
-                return i[1]
+                return i[1] # word found
 
-        return 0
+        return 0 # word not found
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
         """
@@ -45,15 +43,14 @@ class ListDictionary(BaseDictionary):
         @param word_frequency: (word, frequency) to be added
         :return: True whether succeeded, False when word is already in the dictionary
         """
-        # TO BE IMPLEMENTED
-        # place holder for return
+        
         for i in self.dict_list:
-            if i[0] == word_frequency.word:
-                return False
+            if i[0] == word_frequency.word: 
+                return False # word already in the list
             else:
                 li = [word_frequency.word, word_frequency.frequency]
                 self.dict_list.append(li)
-                return True
+                return True # word added
 
 
     def delete_word(self, word: str) -> bool:
@@ -62,12 +59,11 @@ class ListDictionary(BaseDictionary):
         @param word: word to be deleted
         @return: whether succeeded, e.g. return False when point not found
         """
-        # TO BE IMPLEMENTED
-        # place holder for return
+        
         for i in self.dict_list:
             if word in i:
                 self.dict_list.remove(i)
-                return True
+                return True # word deleted
 
         return False
 
@@ -78,11 +74,9 @@ class ListDictionary(BaseDictionary):
         @param prefix_word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'prefix_word'
         """
-        # TO BE IMPLEMENTED
-        # place holder for return
         
-        prefix_li = []  
-        final_li = []  
+        prefix_li = []  # list of all words with the given prefix
+        final_li = []  # list for only top three words
 
         for i in self.dict_list:
             if i[0].startswith(prefix_word):
