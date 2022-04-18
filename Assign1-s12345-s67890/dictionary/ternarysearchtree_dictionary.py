@@ -31,16 +31,16 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @return: frequency > 0 if found and 0 if NOT found
         """
         # TO BE IMPLEMENTED
-        # place holder for return
         current_node = self.tst 
         word_length = len(word)
         i = 0
+
         while i < word_length and current_node != None:
             letter = word[i] 
             if letter < current_node.letter:
                 current_node = current_node.left
             elif letter == current_node.letter:
-                i += 1
+                i = i + 1
                 if i < word_length:
                     current_node = current_node.middle
             else:
@@ -66,10 +66,17 @@ class TernarySearchTreeDictionary(BaseDictionary):
             letter = word_frequency.word[char_pos] 
             if current_node.letter == None:
                 current_node.letter = letter
+
             if letter < current_node.letter:
                 if current_node.left == None:
                     current_node.left = Node()
                 current_node = current_node.left
+
+            elif letter > current_node.letter:
+                if current_node.right == None:
+                    current_node.right = Node()
+                current_node = current_node.right
+
             elif letter == current_node.letter:
                 if char_pos == word_length - 1:
                     break
@@ -77,10 +84,7 @@ class TernarySearchTreeDictionary(BaseDictionary):
                     current_node.middle = Node()
                 current_node = current_node.middle
                 char_pos += 1
-            elif letter > current_node.letter:
-                if current_node.right == None:
-                    current_node.right = Node()
-                current_node = current_node.right
+           
         if current_node.end_word == False:
             current_node.end_word = True
             current_node.frequency = word_frequency.frequency
@@ -94,7 +98,6 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @return: whether succeeded, e.g. return False when point not found
         """
         # TO BE IMPLEMENTED
-        # place holder for return
         if self.search(word) == 0:
             return False
 
@@ -116,14 +119,14 @@ class TernarySearchTreeDictionary(BaseDictionary):
 
         node_li = node_li[::-1]
 
-        for i in range(len(node_li)):
+        while i < len(node_li):
             node = node_li[i] 
             if i == 0:
                 node.end_word = False
             if node.middle == None and node.left == None and node.right == None:
                 node = None
+            i = i + 1
         return True
-
 
     def autocomplete(self, word: str) -> List[WordFrequency]:
         """
@@ -173,13 +176,17 @@ class TernarySearchTreeDictionary(BaseDictionary):
                 temp_li.append(word)
         word_li = temp_li
 
-        for i in range(len(word_li)):
+        i = 0
+        while i < len(word_li):
             word_li[i] = word_li[i][1:]
+            i = i + 1
 
         if word_li != []:
             word_li.sort(key=lambda x: x[1], reverse=True)
             word_li = word_li[:3] 
-            for i in range(len(word_li)):
+            i = 0
+            while i< len(word_li):
                 word_li[i] = WordFrequency(word_li[i][0], word_li[i][1])
+                i = i + 1
 
         return word_li

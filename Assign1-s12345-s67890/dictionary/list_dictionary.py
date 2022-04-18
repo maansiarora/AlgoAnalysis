@@ -34,7 +34,7 @@ class ListDictionary(BaseDictionary):
         # TO BE IMPLEMENTED
         
         for i in self.dict_list:
-            if i[0] == word:             #strip if needed
+            if i[0] == word:             
                 return i[1]
 
         return 0
