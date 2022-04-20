@@ -203,9 +203,9 @@ if __name__ == '__main__':
     with open('sampleData.txt', 'r') as input_file:
         fileLines = input_file.readlines()
  
-    # randomly selecting 1000 words out of 5000 words from sampleData.txt
+    # randomly selecting 3000 words out of 5000 words from sampleData.txt
     with open('new.txt', 'w') as output_file:
-        while len(word_dict.keys()) < 1000:
+        while len(word_dict.keys()) < 3000:
             x = fileLines[random.randint(0, 4999)]
             word= x[0:x.index(" ")]
             frequency= x[x.index(" "):len(x)]
@@ -214,7 +214,7 @@ if __name__ == '__main__':
                 output_file.write(f"{word}  {frequency}")
     
 
-    lines_used = 1000
+    lines_used = 3000
  
     lines = open('new.txt').readlines()
     for i in range(len(lines)):
@@ -246,9 +246,9 @@ if __name__ == '__main__':
             current_size = size
             if len(time_taken) > 1:
                 time_taken[-1] += time_taken[-2]
- 
+            #print(dataset[dataset_key][current_size:size])
         dataset_addition[dataset_key] = time_taken
- 
+        
     addition_table = []
     for size in sizes:
         addition_table.append([size, [], [], []])
@@ -270,8 +270,7 @@ if __name__ == '__main__':
             addition_table[i][j] = sum(addition_table[i][j]) / 3
  
     print_description(addition_table, 'add') # priting the table describing the time compexities in different scenarios 
-   
- 
+    
     # Scenario 2 - shrinking dictionary
     # defining the sizes of words to be deleted from the base dictionary
     sizes = [10, 100, 200, 400, 800]
@@ -313,63 +312,47 @@ if __name__ == '__main__':
     #printing the description table for time complexities of different scenarios
     print_description(deletion_table, 'delete') 
 
-
-    # Scenario 3 - static dictionary
-    # Autocompleting dictionary
-
-    sizes = []
-    for num in range(1, 8):
-        sizes.append(num)
- 
-    number_of_autocompletes = 3
-    autocomplete_phrases = {}
-    for size in sizes:
-        phrase_list = []
-        time_taken = 0
- 
-        while len(phrase_list) < number_of_autocompletes:
-            line_num = random.randint(0, len(lines) - 1) # randomly selecting a line number from our dataset
-            current_word = lines[line_num].split("  ")[0] # getting the word of that randomly selected line
-           
-            phrase = ""
-            if len(current_word) >= size:
-                phrase = current_word[:size]
-            if phrase != "" and phrase not in phrase_list:
-                phrase_list.append(phrase)
- 
-        for phrase in phrase_list:
-            time_taken += dict_autocompletion(agent, phrase)
- 
-        # getting the average time
-        autocomplete_phrases[size] = time_taken / number_of_autocompletes
-        
-    ac_table = []
-    for key in autocomplete_phrases:
-        ac_table.append([key, autocomplete_phrases[key]])
- 
-    print_description(ac_table, 'autocomplete') #printing the description table for autocomplete operation
- 
  
     # Scenario 3 - static dictinary
     # search operation
-    sizes = []
- 
-    for number in range(1, 8):
-        sizes.append(number)
+    print("")
+    print("Time complexitites of search operation in static dictionary of different sizes\n")
     
-    for size in sizes:
-        phrase_list = []
-        time_taken = 0
+    sizes = [10, 100, 500, 1000, 2000]
+    dataset_addition = {}
+    
+    for dataset_key in dataset:
+        current_size = 0 # current size of the dictionary
+        time_taken = [] # list to define the time taken to perform the function
+        temp_agent = agent 
  
+        for size in sizes:
+            time1 = 0 
+            time_taken.append(dict_addition(temp_agent, dataset[dataset_key][current_size:size])) 
+            time1 = dict_search(temp_agent, 'improvise')
+            #print(len(dataset[dataset_key][0:size]))
+            current_size = size
+            print(current_size, time1, dataset_key)
 
-        line_number = random.randint(0, len(lines) - 1) # randomly selecting a line number from our dataset
-        current_word = lines[line_number].split("  ")[0] # getting the word of that randomly selected line
-        phrase_list.append(current_word)
-
-        time_taken += dict_search(agent, current_word) # calculating the time to search the current word
-        print(time_taken, current_word) #printing the time taken for the operations along with the word being searched
+    # Scenario 3 - static dictionary
+    # Autocompleting dictionary
+    print("")
+    print("Time complexitites of autocomplete operation in static dictionary of different sizes\n")
     
+    sizes = [10, 100, 500, 1000, 2000]
+    dataset_addition = {}
+    
+    for dataset_key in dataset:
+        current_size = 0 # current size of the dictionary
+        time_taken = [] # list to define the time taken to perform the function
+        temp_agent = agent 
  
-    
-   
+        for size in sizes:
+            time1 = 0 
+            time_taken.append(dict_addition(temp_agent, dataset[dataset_key][current_size:size])) 
+            time1 = dict_autocompletion(temp_agent, 'im')
+            #print(len(dataset[dataset_key][0:size]))
+            current_size = size
+            print(current_size, time1, dataset_key)
+            
 

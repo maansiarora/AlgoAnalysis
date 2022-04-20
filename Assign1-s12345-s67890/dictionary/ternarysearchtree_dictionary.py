@@ -122,7 +122,8 @@ class TernarySearchTreeDictionary(BaseDictionary):
 
         node_li = node_li[::-1]
 
-        while i < len(node_li):
+        i = 0
+        while i < len(node_li)-1:
             node = node_li[i] 
             if i == 0:
                 node.end_word = False
@@ -130,7 +131,7 @@ class TernarySearchTreeDictionary(BaseDictionary):
                 node = None
             i = i + 1
         return True # word deleted
-
+        
     def autocomplete(self, word: str) -> List[WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'word' as a prefix
