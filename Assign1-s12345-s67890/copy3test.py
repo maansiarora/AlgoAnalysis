@@ -204,7 +204,7 @@ if __name__ == '__main__':
         fileLines = input_file.readlines()
  
     # randomly selecting 3000 words out of 5000 words from sampleData.txt
-    with open('new.txt', 'w') as output_file:
+    with open('generated_dataset.txt', 'w') as output_file:
         while len(word_dict.keys()) < 3000:
             x = fileLines[random.randint(0, 4999)]
             word= x[0:x.index(" ")]
@@ -216,7 +216,7 @@ if __name__ == '__main__':
 
     lines_used = 3000
  
-    lines = open('new.txt').readlines()
+    lines = open('generated_dataset.txt').readlines()
     for i in range(len(lines)):
         lines[i] = lines[i].replace("\n", "")
     dataset = {} # Datasets
@@ -233,7 +233,7 @@ if __name__ == '__main__':
 
     # Scenario 1 - growing dictionary
     # defining the sizes of words to be added to the base dictionary
-    sizes = [10, 100, 500, 1000, 2000, 4000]
+    sizes = [10, 100, 500, 1000, 2000]
     dataset_addition = {}
     
     for dataset_key in dataset:
@@ -246,7 +246,6 @@ if __name__ == '__main__':
             current_size = size
             if len(time_taken) > 1:
                 time_taken[-1] += time_taken[-2]
-            #print(dataset[dataset_key][current_size:size])
         dataset_addition[dataset_key] = time_taken
         
     addition_table = []
@@ -269,7 +268,7 @@ if __name__ == '__main__':
         for j in range(1, len(dataset_names) + 1):
             addition_table[i][j] = sum(addition_table[i][j]) / 3
  
-    print_description(addition_table, 'add') # priting the table describing the time compexities in different scenarios 
+    print_description(addition_table, 'add') # printing the table describing the time compexities in different scenarios 
     
     # Scenario 2 - shrinking dictionary
     # defining the sizes of words to be deleted from the base dictionary
